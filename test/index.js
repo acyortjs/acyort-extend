@@ -1,4 +1,5 @@
 const assert = require('power-assert')
+const sinon = require('sinon')
 const path = require('path')
 const Extend = require('../')
 
@@ -23,13 +24,25 @@ class Acyort {
   }
 }
 
-
 const acyort = new Acyort()
 
 describe('extend', () => {
+  const spy = sinon.spy(acyort, 'logger')
+
+  after(() => {
+    spy.restore()
+  })
+
   it('helper', async () => {
     await acyort.extend.init()
     assert(typeof acyort.extend.helpers.js === 'function')
+  })
+
+  it('runs', async () => {
+    await acyort.extend.init()
+    await acyort.extend.run('after_init', null)
+
+    assert(spy.calledWith('scripts') === true)
   })
 })
 
