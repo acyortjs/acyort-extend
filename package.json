@@ -4,6 +4,7 @@
   "description": "Extended support for AcyOrt",
   "main": "index.js",
   "scripts": {
+    "pretest": "cd test && node create.js",
     "test": "npm run test:lint && npm run test:cover",
     "test:unit": "mocha --reporter dot --require intelli-espower-loader ./test",
     "test:lint": "eslint .",

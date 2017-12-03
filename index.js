@@ -9,15 +9,18 @@ class Extend extends Plugins {
 
     this.acyort = acyort
     this.types = [
+      'after_init',
       'after_fetch',
       'after_process',
       'after_generate',
     ]
     this.scripts = {
+      after_init: [],
       after_fetch: [],
       after_process: [],
       after_generate: [],
     }
+    this.helpers = {}
   }
 
   register(type, fn) {
@@ -26,22 +29,33 @@ class Extend extends Plugins {
     }
   }
 
+  helper(name, fn) {
+    if (typeof fn === 'function') {
+      this.helpers[name] = fn
+    }
+  }
+
   init() {
     const {
       acyort,
       plugins,
       register,
+      helper,
       types,
       scripts,
+      helpers,
     } = this
-    const { config } = acyort
+    const { config, logger } = acyort
     const { scripts_dir } = config
     const context = {
-      ...acyort,
+      logger,
+      config,
       extend: {
         types,
         scripts,
         register,
+        helper,
+        helpers,
       },
     }
 
@@ -52,10 +66,6 @@ class Extend extends Plugins {
       .forEach(script => exec(script, context))
 
     return Promise.resolve()
-  }
-
-  getScripts(type) {
-    return this.scripts[type]
   }
 }
 
