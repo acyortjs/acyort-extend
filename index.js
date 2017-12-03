@@ -35,6 +35,11 @@ class Extend extends Plugins {
     }
   }
 
+  run(type, data) {
+    const scripts = this.scripts[type].map(script => script(data))
+    return Promise.all(scripts).then(() => data)
+  }
+
   init() {
     const {
       acyort,
@@ -60,7 +65,7 @@ class Extend extends Plugins {
     }
 
     config.scripts
-      .map(script => path.join(process.cwd(), scripts_dir, script))
+      .map(script => path.join(config.basePath || process.cwd(), scripts_dir, script))
       .filter(script => fs.existsSync(script))
       .concat(plugins)
       .forEach(script => exec(script, context))

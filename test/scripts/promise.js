@@ -1,4 +1,6 @@
-acyort.extend.register('after_fetch', () => {
+acyort.extend.register('after_fetch', data => {
+  data.path = 'module'
+
   return new Promise(reslove => {
     setTimeout(() => {
       acyort.logger('promise')
