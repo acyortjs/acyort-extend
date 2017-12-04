@@ -5,6 +5,6 @@ acyort.extend.register('after_fetch', data => {
     setTimeout(() => {
       acyort.logger('promise')
       reslove()
-    }, 1000)
+    }, 50)
   })
 })
