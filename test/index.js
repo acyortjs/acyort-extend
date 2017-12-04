@@ -27,7 +27,11 @@ class Acyort {
 const acyort = new Acyort()
 
 describe('extend', () => {
-  const spy = sinon.spy(acyort, 'logger')
+  let spy
+
+  before(() => {
+    spy = sinon.spy(acyort, 'logger')
+  })
 
   after(() => {
     spy.restore()
@@ -35,20 +39,43 @@ describe('extend', () => {
 
   it('helper', async () => {
     await acyort.extend.init()
-    assert(typeof acyort.extend.helpers.js === 'function')
+    assert(acyort.extend.helpers.js('ab') === 'a.b')
   })
 
   it('runs', async () => {
     await acyort.extend.init()
-    await acyort.extend.run('after_init', null)
 
+    await acyort.extend.run('after_init', null)
     assert(spy.calledWith('scripts') === true)
+
+    const data = { path: 'change' }
+    await acyort.extend.run('after_fetch', data)
+    assert(data.path === 'module')
+    assert(spy.calledWith('promise') === true)
+
+    await acyort.extend.run('after_process', data)
+    assert(spy.calledWith(path.join(process.cwd(), data.path)) === true)
+
+    await acyort.extend.run('after_generate', data)
+    assert(spy.calledWith(2) === true)
+  })
+
+  it('error scripts', async () => {
+    config.scripts = ['error.js', 'errorHelper.js']
+    config.plugins = ['error']
+
+    await acyort.extend.init()
+    assert(acyort.extend.scripts = [])
+    assert(acyort.extend.plugins = [])
+    assert(acyort.extend.helpers = [])
+  })
+
+  it('no scripts', async () => {
+    config.scripts = []
+    config.plugins = []
+
+    await acyort.extend.init()
+    assert(acyort.extend.scripts = [])
+    assert(acyort.extend.plugins = [])
   })
 })
-
-
-// acyort.extend.init()
-//   .then(() => acyort.extend.run('after_init', null))
-//   .then(() => acyort.extend.run('after_fetch', { path: 'change' }))
-//   .then(data => acyort.extend.run('after_process', data))
-//   .then(() => console.log(acyort.extend.helpers))
