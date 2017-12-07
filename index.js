@@ -50,11 +50,10 @@ class Extend extends Plugins {
       scripts,
       helpers,
     } = this
-    const { config, logger } = acyort
+    const { config } = acyort
     const { scripts_dir } = config
     const context = {
-      logger,
-      config,
+      ...acyort,
       extend: {
         types,
         scripts,
