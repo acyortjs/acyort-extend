@@ -4,9 +4,10 @@ const Plugins = require('./lib/plugins')
 const exec = require('./lib/exec')
 
 class Extend extends Plugins {
-  constructor(acyort) {
+  constructor(acyort, methods) {
     super(acyort.config)
 
+    this.methods = methods
     this.acyort = acyort
     this.types = [
       'after_init',
@@ -53,7 +54,6 @@ class Extend extends Plugins {
     const { config } = acyort
     const { scripts_dir } = config
     const context = {
-      ...acyort,
       extend: {
         types,
         scripts,
@@ -62,6 +62,10 @@ class Extend extends Plugins {
         helpers,
       },
     }
+
+    this.methods.forEach((method) => {
+      context[method] = acyort[method]
+    })
 
     config.scripts
       .map(script => path.join(config.basePath, scripts_dir, script))
