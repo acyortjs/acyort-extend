@@ -89,7 +89,7 @@ class Acyort {
   constructor() {
     this.logger = console.log
     this.config = config
-    this.extend = new Extend(this)
+    this.extend = new Extend(this, ['logger', 'config'])
   }
 }
 
