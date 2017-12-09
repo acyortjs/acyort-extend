@@ -68,7 +68,7 @@ class Extend extends Plugins {
     })
 
     config.scripts
-      .map(script => path.join(config.basePath, scripts_dir, script))
+      .map(script => path.join(config.base, scripts_dir, script))
       .filter(script => fs.existsSync(script))
       .concat(plugins)
       .forEach(script => exec(script, context))

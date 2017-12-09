@@ -74,7 +74,7 @@ const Extend = require('acyort-extend')
 
 const config = {
   scripts_dir: 'scripts',
-  basePath: process.cwd(),
+  base: process.cwd(),
   scripts: [
     'init.js',
     'helper.js',

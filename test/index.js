@@ -5,7 +5,7 @@ const Extend = require('../')
 
 const config = {
   scripts_dir: 'scripts',
-  basePath: __dirname,
+  base: __dirname,
   scripts: [
     'init.js',
     'helper.js',
