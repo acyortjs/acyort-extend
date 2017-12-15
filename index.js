@@ -67,6 +67,11 @@ class Extend extends Plugins {
       context[method] = acyort[method]
     })
 
+    // reset the scripts when recall this method
+    Object.keys(this.scripts).forEach((type) => {
+      this.scripts[type] = []
+    })
+
     config.scripts
       .map(script => path.join(config.base, scripts_dir, script))
       .filter(script => fs.existsSync(script))

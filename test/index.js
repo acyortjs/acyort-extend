@@ -31,6 +31,13 @@ describe('extend', () => {
     assert(acyort.extend.helpers.js('ab') === 'a.b')
   })
 
+  it('recall init', async () => {
+    const acyort = new Acyort()
+    await acyort.extend.init()
+    await acyort.extend.init()
+    assert(acyort.extend.scripts.after_init.length === 1)
+  })
+
   it('runs', async () => {
     const acyort = new Acyort()
     const spy = sinon.spy(acyort, 'logger')
