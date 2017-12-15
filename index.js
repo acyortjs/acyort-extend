@@ -13,13 +13,13 @@ class Extend extends Plugins {
       'after_init',
       'after_fetch',
       'after_process',
-      'after_generate',
+      'after_build',
     ]
     this.scripts = {
       after_init: [],
       after_fetch: [],
       after_process: [],
-      after_generate: [],
+      after_build: [],
     }
     this.helpers = {}
   }

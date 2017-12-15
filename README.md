@@ -32,7 +32,7 @@ acyort.extend.register('after_init', () => {
   acyort.logger(acyort.config.scripts_dir)
 })
 
-acyort.extend.register('after_generate', () => {
+acyort.extend.register('after_build', () => {
   acyort.logger(data.a)
 })
 
@@ -101,7 +101,7 @@ acyort.extend.init()
   .then(() => acyort.extend.run('after_init', null))
   .then(() => acyort.extend.run('after_fetch', data))
   .then(() => acyort.extend.run('after_process', data))
-  .then(() => acyort.extend.run('after_generate', null))
+  .then(() => acyort.extend.run('after_build', null))
   .then(() => console.log(acyort.extend.helper.js('ab')))
 
 /*

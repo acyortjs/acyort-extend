@@ -48,7 +48,7 @@ describe('extend', () => {
     await acyort.extend.run('after_process', data)
     assert(spy.calledWith(path.join(process.cwd(), data.path)) === true)
 
-    await acyort.extend.run('after_generate', data)
+    await acyort.extend.run('after_build', data)
     assert(spy.calledWith(2) === true)
 
     spy.restore()

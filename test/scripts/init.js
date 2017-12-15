@@ -5,6 +5,6 @@ acyort.extend.register('after_init', () => {
   acyort.logger(acyort.config.scripts_dir)
 })
 
-acyort.extend.register('after_generate', () => {
+acyort.extend.register('after_build', () => {
   acyort.logger(data.a)
 })

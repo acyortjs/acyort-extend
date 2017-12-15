@@ -1,6 +1,6 @@
 {
   "name": "acyort-extend",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Extended support for AcyOrt",
   "main": "index.js",
   "scripts": {
