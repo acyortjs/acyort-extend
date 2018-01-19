@@ -72,6 +72,13 @@ describe('extend', () => {
     assert(acyort.extend.helpers = [])
   })
 
+  it('no exist script', async () => {
+    config.scripts = ['noExist.js']
+    const acyort = new Acyort()
+    await acyort.extend.init()
+    assert(acyort.extend.scripts = [])
+  })
+
   it('no scripts', async () => {
     config.scripts = []
     config.plugins = []

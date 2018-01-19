@@ -1,12 +1,16 @@
 const fs = require('fs')
 const path = require('path')
+const Logger = require('acyort-logger')
 const Plugins = require('./lib/plugins')
 const exec = require('./lib/exec')
 
 class Extend extends Plugins {
   constructor(acyort, methods) {
-    super(acyort.config)
+    const logger = new Logger()
 
+    super(acyort.config, logger)
+
+    this.logger = logger
     this.methods = methods
     this.acyort = acyort
     this.types = [
@@ -74,7 +78,13 @@ class Extend extends Plugins {
 
     config.scripts
       .map(script => path.join(config.base, scripts_dir, script))
-      .filter(script => fs.existsSync(script))
+      .filter((script) => {
+        if (fs.existsSync(script)) {
+          this.logger.info(`Use script: ${script.split('/').slice(-1)}`)
+          return true
+        }
+        return false
+      })
       .concat(plugins)
       .forEach(script => exec(script, context))
 
