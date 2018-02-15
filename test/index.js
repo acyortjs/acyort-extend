@@ -2,13 +2,13 @@ const assert = require('power-assert')
 const sinon = require('sinon')
 const path = require('path')
 const Extend = require('../')
+const Logger = require('acyort-logger')
 
 const config = {
   scripts_dir: 'scripts',
   base: __dirname,
   scripts: [
     'init.js',
-    'helper.js',
     'promise.js'
   ],
   plugins: [
@@ -18,19 +18,13 @@ const config = {
 
 class Acyort {
   constructor() {
-    this.logger = console.log
+    this.logger = new Logger()
     this.config = config
     this.extend = new Extend(this, ['logger', 'config'])
   }
 }
 
 describe('extend', () => {
-  it('helper', async () => {
-    const acyort = new Acyort()
-    await acyort.extend.init()
-    assert(acyort.extend.helpers.js('ab') === 'a.b')
-  })
-
   it('recall init', async () => {
     const acyort = new Acyort()
     await acyort.extend.init()
@@ -40,8 +34,7 @@ describe('extend', () => {
 
   it('runs', async () => {
     const acyort = new Acyort()
-    const spy = sinon.spy(acyort, 'logger')
-
+    const spy = sinon.spy(acyort.logger, 'info')
     await acyort.extend.init()
 
     await acyort.extend.run('after_init', null)
@@ -57,19 +50,16 @@ describe('extend', () => {
 
     await acyort.extend.run('after_build', data)
     assert(spy.calledWith(2) === true)
-
-    spy.restore()
   })
 
   it('error scripts', async () => {
-    config.scripts = ['error.js', 'errorHelper.js']
+    config.scripts = ['error.js']
     config.plugins = ['error']
 
     const acyort = new Acyort()
     await acyort.extend.init()
     assert(acyort.extend.scripts = [])
     assert(acyort.extend.plugins = [])
-    assert(acyort.extend.helpers = [])
   })
 
   it('no exist script', async () => {

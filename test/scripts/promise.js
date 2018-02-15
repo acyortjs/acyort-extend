@@ -3,7 +3,7 @@ acyort.extend.register('after_fetch', data => {
 
   return new Promise(reslove => {
     setTimeout(() => {
-      acyort.logger('promise')
+      acyort.logger.info('promise')
       reslove()
     }, 50)
   })

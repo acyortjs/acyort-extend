@@ -9,7 +9,7 @@ const pkg = `{
 const index = `const path = require('path')
 
 acyort.extend.register('after_process', (data) => {
-  acyort.logger(path.join(process.cwd(), data.path))
+  acyort.logger.info(path.join(process.cwd(), data.path))
 })`
 
 const errorPkg = `{

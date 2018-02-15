@@ -1,7 +1,7 @@
 {
   "name": "acyort-extend",
-  "version": "0.1.7",
-  "description": "Extended support for AcyOrt",
+  "version": "1.0.0",
+  "description": "Extends for AcyOrt",
   "main": "index.js",
   "scripts": {
     "pretest": "cd test && node create.js",
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/acyortjs/acyort-extend#readme",
   "devDependencies": {
+    "acyort-logger": "^1.0.0",
     "eslint": "^4.12.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
@@ -37,8 +38,5 @@
     "mocha": "^4.0.1",
     "power-assert": "^1.4.4",
     "sinon": "^4.1.2"
-  },
-  "dependencies": {
-    "acyort-logger": "^0.1.0"
   }
 }

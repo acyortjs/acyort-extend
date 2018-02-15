@@ -1,16 +1,13 @@
 const fs = require('fs')
 const path = require('path')
-const Logger = require('acyort-logger')
 const Plugins = require('./lib/plugins')
 const exec = require('./lib/exec')
 
 class Extend extends Plugins {
   constructor(acyort, methods) {
-    const logger = new Logger()
+    super(acyort)
 
-    super(acyort.config, logger)
-
-    this.logger = logger
+    this.logger = acyort.logger
     this.methods = methods
     this.acyort = acyort
     this.types = [
@@ -25,18 +22,11 @@ class Extend extends Plugins {
       after_process: [],
       after_build: [],
     }
-    this.helpers = {}
   }
 
   register(type, fn) {
     if (this.types.indexOf(type) > -1 && typeof fn === 'function') {
       this.scripts[type].push(fn)
-    }
-  }
-
-  helper(name, fn) {
-    if (typeof fn === 'function') {
-      this.helpers[name] = fn
     }
   }
 
@@ -50,10 +40,8 @@ class Extend extends Plugins {
       acyort,
       plugins,
       register,
-      helper,
       types,
       scripts,
-      helpers,
     } = this
     const { config } = acyort
     const { scripts_dir } = config
@@ -62,8 +50,6 @@ class Extend extends Plugins {
         types,
         scripts,
         register,
-        helper,
-        helpers,
       },
     }
 
@@ -80,7 +66,7 @@ class Extend extends Plugins {
       .map(script => path.join(config.base, scripts_dir, script))
       .filter((script) => {
         if (fs.existsSync(script)) {
-          this.logger.info(`Use script: ${script.split('/').slice(-1)}`)
+          this.logger.info(`Use script: ${script.split('/').slice(-1)}`, 'script')
           return true
         }
         return false
