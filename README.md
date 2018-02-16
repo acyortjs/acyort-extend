@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/acyortjs/acyort-extend.svg?branch=master)](https://travis-ci.org/acyortjs/acyort-extend)
 [![codecov](https://codecov.io/gh/acyortjs/acyort-extend/branch/master/graph/badge.svg)](https://codecov.io/gh/acyortjs/acyort-extend)
 
-Extended support for [AcyOrt](https://github.com/acyortjs/acyort)
+Extends for [AcyOrt](https://github.com/acyortjs/acyort)
 
 ## Install
 
@@ -19,21 +19,16 @@ $ npm i acyort-extend -S
 // scripts/export.js
 module.exports = { a: 1 }
 
-// scripts/helper.js
-acyort.extend.helper('js', function(s) {
-  return s.split('').join('.')
-})
-
 // scripts/init.js
 const data = require(require.resolve('./export'))
 
 acyort.extend.register('after_init', () => {
   data.a = 2
-  acyort.logger(acyort.config.scripts_dir)
+  acyort.logger.info(acyort.config.scripts_dir)
 })
 
 acyort.extend.register('after_build', () => {
-  acyort.logger(data.a)
+  acyort.logger.info(data.a)
 })
 
 // scripts/promise.js
@@ -42,7 +37,7 @@ acyort.extend.register('after_fetch', data => {
 
   return new Promise(reslove => {
     setTimeout(() => {
-      acyort.logger('promise')
+      acyort.logger.info('promise')
       reslove()
     }, 1000)
   })
@@ -63,7 +58,7 @@ acyort.extend.register('after_fetch', data => {
 const path = require('path')
 
 acyort.extend.register('after_process', (data) => {
-  acyort.logger(path.join(process.cwd(), data.path))
+  acyort.logger.info(path.join(process.cwd(), data.path))
 })
 ```
 
@@ -71,13 +66,13 @@ acyort.extend.register('after_process', (data) => {
 
 ```js
 const Extend = require('acyort-extend')
+const Logger = require('acyort-logger')
 
 const config = {
   scripts_dir: 'scripts',
   base: process.cwd(),
   scripts: [
     'init.js',
-    'helper.js',
     'promise.js'
   ],
   plugins: [
@@ -87,7 +82,7 @@ const config = {
 
 class Acyort {
   constructor() {
-    this.logger = console.log
+    this.logger = new Logger()
     this.config = config
     this.extend = new Extend(this, ['logger', 'config'])
   }
@@ -102,7 +97,6 @@ acyort.extend.init()
   .then(() => acyort.extend.run('after_fetch', data))
   .then(() => acyort.extend.run('after_process', data))
   .then(() => acyort.extend.run('after_build', null))
-  .then(() => console.log(acyort.extend.helper.js('ab')))
 
 /*
 log result:
@@ -111,6 +105,5 @@ scripts
 promise
 .../acyort-extend/module
 2
-a.b
 */
 ```
