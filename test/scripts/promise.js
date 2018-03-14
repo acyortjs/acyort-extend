@@ -1,10 +1,10 @@
-acyort.extend.register('after_fetch', data => {
-  data.path = 'module'
-
-  return new Promise(reslove => {
-    setTimeout(() => {
-      acyort.logger.info('promise')
-      reslove()
-    }, 50)
-  })
-})
+acyort.scripts.push(
+  data => {
+    return new Promise(reslove => {
+      setTimeout(() => {
+        acyort.logger.info(data)
+        reslove()
+      }, 50)
+    })
+  }
+)

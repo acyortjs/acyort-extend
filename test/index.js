@@ -16,40 +16,28 @@ const config = {
   ]
 }
 
+function run(scripts, data) {
+  return Promise.all(scripts.map(script => script(data))).then(() => data)
+}
+
 class Acyort {
   constructor() {
     this.logger = new Logger()
     this.config = config
-    this.extend = new Extend(this, ['logger', 'config'])
+    this.scripts = []
+    this.extend = new Extend(this, ['logger', 'config', 'scripts'])
   }
 }
 
 describe('extend', () => {
-  it('recall init', async () => {
-    const acyort = new Acyort()
-    await acyort.extend.init()
-    await acyort.extend.init()
-    assert(acyort.extend.scripts.after_init.length === 1)
-  })
-
   it('runs', async () => {
     const acyort = new Acyort()
     const spy = sinon.spy(acyort.logger, 'info')
     await acyort.extend.init()
+    assert(spy.calledWith(path.join(process.cwd(), 'change')) === true)
 
-    await acyort.extend.run('after_init', null)
-    assert(spy.calledWith('scripts') === true)
-
-    const data = { path: 'change' }
-    await acyort.extend.run('after_fetch', data)
-    assert(data.path === 'module')
+    await run(acyort.scripts, 'promise')
     assert(spy.calledWith('promise') === true)
-
-    await acyort.extend.run('after_process', data)
-    assert(spy.calledWith(path.join(process.cwd(), data.path)) === true)
-
-    await acyort.extend.run('after_build', data)
-    assert(spy.calledWith(2) === true)
   })
 
   it('error scripts', async () => {
@@ -60,13 +48,6 @@ describe('extend', () => {
     await acyort.extend.init()
     assert(acyort.extend.scripts = [])
     assert(acyort.extend.plugins = [])
-  })
-
-  it('no exist script', async () => {
-    config.scripts = ['noExist.js']
-    const acyort = new Acyort()
-    await acyort.extend.init()
-    assert(acyort.extend.scripts = [])
   })
 
   it('no scripts', async () => {
