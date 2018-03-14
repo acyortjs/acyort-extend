@@ -21,27 +21,19 @@ module.exports = { a: 1 }
 
 // scripts/init.js
 const data = require(require.resolve('./export'))
-
-acyort.extend.register('after_init', () => {
-  data.a = 2
-  acyort.logger.info(acyort.config.scripts_dir)
-})
-
-acyort.extend.register('after_build', () => {
-  acyort.logger.info(data.a)
-})
+acyort.logger.info(acyort.config.scripts_dir)
 
 // scripts/promise.js
-acyort.extend.register('after_fetch', data => {
-  data.path = 'module'
-
-  return new Promise(reslove => {
-    setTimeout(() => {
-      acyort.logger.info('promise')
-      reslove()
-    }, 1000)
-  })
-})
+acyort.scripts.push(
+  data => {
+    return new Promise(reslove => {
+      setTimeout(() => {
+        acyort.logger.info(data)
+        reslove()
+      }, 1000)
+    })
+  }
+)
 ```
 
 ### plugins
@@ -56,10 +48,7 @@ acyort.extend.register('after_fetch', data => {
 
 // index.js
 const path = require('path')
-
-acyort.extend.register('after_process', (data) => {
-  acyort.logger.info(path.join(process.cwd(), data.path))
-})
+ acyort.logger.info(path.join(process.cwd(), 'change'))
 ```
 
 ### run
@@ -84,26 +73,25 @@ class Acyort {
   constructor() {
     this.logger = new Logger()
     this.config = config
-    this.extend = new Extend(this, ['logger', 'config'])
+    this.scripts = []
+    this.extend = new Extend(this, ['logger', 'config', 'scripts'])
   }
 }
 
-const data = { path: 'change' }
+function run(scripts, data) {
+  return Promise.all(scripts.map(script => script(data))).then(() => data)
+}
 
 const acyort = new Acyort()
 
 acyort.extend.init()
-  .then(() => acyort.extend.run('after_init', null))
-  .then(() => acyort.extend.run('after_fetch', data))
-  .then(() => acyort.extend.run('after_process', data))
-  .then(() => acyort.extend.run('after_build', null))
+  .then(() => run(acyort.scripts, 'promise'))
 
 /*
 log result:
 
 scripts
+.../acyort-extend/change
 promise
-.../acyort-extend/module
-2
 */
 ```
