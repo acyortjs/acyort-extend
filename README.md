@@ -1,4 +1,4 @@
-# acyort-extend
+# Extender
 
 [![Build Status](https://travis-ci.org/acyortjs/extender.svg?branch=master)](https://travis-ci.org/acyortjs/extender)
 [![codecov](https://codecov.io/gh/acyortjs/extender/branch/master/graph/badge.svg)](https://codecov.io/gh/acyortjs/extender)
@@ -32,8 +32,7 @@ const params = { log: console.log }
 const key = 'params'
 const script = path.join(__dirname, 'init.js')
 
-extender(script, params, key)
-// Extende Function
+extender(script, params, key) // Extends Function
 
 // Promise use example see the test cases
 ```
