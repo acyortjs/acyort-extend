@@ -1,39 +1,29 @@
+const Module = require('module')
+const vm = require('vm')
 const fs = require('fs')
 const path = require('path')
-const Plugins = require('./lib/plugins')
-const exec = require('./lib/exec')
 
-class Extend extends Plugins {
-  constructor(acyort, methods) {
-    super(acyort)
-    this.logger = acyort.logger
-    this.methods = methods
-    this.acyort = acyort
-  }
+// https://github.com/hexojs/hexo/blob/master/lib/hexo/index.js#L206
+module.exports = (scriptPath, params, key) => {
+  const module = new Module(scriptPath)
+  const requirer = p => module.require(p)
+  const executes = fs.readFileSync(scriptPath)
+  const script = `(function(exports,require,module,__filename,__dirname,${key}){${executes}})`
+  const executor = vm.runInThisContext(script, scriptPath)
+  const {
+    _nodeModulePaths,
+    _resolveFilename,
+    _extensions,
+    _cache,
+  } = Module
 
-  init() {
-    const { acyort, plugins } = this
-    const { scripts_dir, scripts, base } = acyort.config
-    const context = {}
+  module.filename = scriptPath
+  module.paths = _nodeModulePaths(scriptPath)
 
-    this.methods.forEach((method) => {
-      context[method] = acyort[method]
-    })
+  requirer.resolve = request => _resolveFilename(request, module)
+  requirer.main = process.mainModule
+  requirer.extensions = _extensions
+  requirer.cache = _cache
 
-    scripts
-      .map(script => path.join(base, scripts_dir, script))
-      .filter((script) => {
-        if (fs.existsSync(script)) {
-          this.logger.info(`Use script: ${script.split('/').slice(-1)}`, 'script')
-          return true
-        }
-        return false
-      })
-      .concat(plugins)
-      .forEach(script => exec(script, context))
-
-    return Promise.resolve()
-  }
+  executor(module.exports, requirer, module, scriptPath, path.dirname(scriptPath), params)
 }
-
-module.exports = Extend
