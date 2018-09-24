@@ -1,10 +1,10 @@
-acyort.scripts.push(
+params.queue.push(
   data => {
     return new Promise(reslove => {
       setTimeout(() => {
-        acyort.logger.info(data)
+        params.log(data)
         reslove()
-      }, 50)
+      }, 200)
     })
   }
 )

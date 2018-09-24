@@ -1,97 +1,39 @@
 # acyort-extend
 
-[![Build Status](https://travis-ci.org/acyortjs/acyort-extend.svg?branch=master)](https://travis-ci.org/acyortjs/acyort-extend)
-[![codecov](https://codecov.io/gh/acyortjs/acyort-extend/branch/master/graph/badge.svg)](https://codecov.io/gh/acyortjs/acyort-extend)
+[![Build Status](https://travis-ci.org/acyortjs/extender.svg?branch=master)](https://travis-ci.org/acyortjs/extender)
+[![codecov](https://codecov.io/gh/acyortjs/extender/branch/master/graph/badge.svg)](https://codecov.io/gh/acyortjs/extender)
 
-Extends for [AcyOrt](https://github.com/acyortjs/acyort)
+Node script extender
 
 ## Install
 
 ```bash
-$ npm i acyort-extend -S
+$ npm i @acyort/extender -S
 ```
 
 ## Usage
 
-### scripts
+```js
+// export.js
+module.exports = 'Extends Function'
+```
 
 ```js
-// scripts/export.js
-module.exports = { a: 1 }
-
-// scripts/init.js
+// init.js
 const data = require(require.resolve('./export'))
-acyort.logger.info(acyort.config.scripts_dir)
-
-// scripts/promise.js
-acyort.scripts.push(
-  data => {
-    return new Promise(reslove => {
-      setTimeout(() => {
-        acyort.logger.info(data)
-        reslove()
-      }, 1000)
-    })
-  }
-)
+params.log(data)
 ```
 
-### plugins
-
 ```js
-// package.json
-{
-  "name": "module",
-  "version": "0.0.0",
-  "main": "index.js"
-}
-
-// index.js
+const extender = require('@acyort/extender')
 const path = require('path')
- acyort.logger.info(path.join(process.cwd(), 'change'))
-```
 
-### run
+const params = { log: console.log }
+const key = 'params'
+const script = path.join(__dirname, 'init.js')
 
-```js
-const Extend = require('acyort-extend')
-const Logger = require('acyort-logger')
+extender(script, params, key)
+// Extende Function
 
-const config = {
-  scripts_dir: 'scripts',
-  base: process.cwd(),
-  scripts: [
-    'init.js',
-    'promise.js'
-  ],
-  plugins: [
-    'module'
-  ]
-}
-
-class Acyort {
-  constructor() {
-    this.logger = new Logger()
-    this.config = config
-    this.scripts = []
-    this.extend = new Extend(this, ['logger', 'config', 'scripts'])
-  }
-}
-
-function run(scripts, data) {
-  return Promise.all(scripts.map(script => script(data))).then(() => data)
-}
-
-const acyort = new Acyort()
-
-acyort.extend.init()
-  .then(() => run(acyort.scripts, 'promise'))
-
-/*
-log result:
-
-scripts
-.../acyort-extend/change
-promise
-*/
+// Promise use example see the test cases
 ```
