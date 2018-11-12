@@ -1,8 +1,11 @@
 {
   "name": "@acyort/extender",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node script extender",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "test": "npm run test:lint && npm run test:cover",
     "test:unit": "mocha --reporter dot --require intelli-espower-loader ./test",

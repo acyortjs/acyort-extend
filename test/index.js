@@ -1,3 +1,6 @@
+/* global describe it */
+/* eslint no-extend-native: 0 */
+
 const assert = require('power-assert')
 const sinon = require('sinon')
 const path = require('path')
@@ -8,14 +11,14 @@ function run(scripts, data) {
 }
 
 const params = {
-  log: console.log,
+  log: global.console.log,
   queue: [],
 }
 const key = 'params'
 
 const scripts = {
   init: path.join(__dirname, 'scripts/init.js'),
-  promise: path.join(__dirname, 'scripts/promise.js')
+  promise: path.join(__dirname, 'scripts/promise.js'),
 }
 
 describe('extender', () => {
